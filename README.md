@@ -1,2 +1,3 @@
 # meraki-ssid-psk-rotator
-Rotate a Meraki SSID's PSK across selected networks — built for recurring guest WiFi password changes.
+
+Rotates the pre-shared key of a chosen SSID across selected networks in a Meraki organization. Under active development — built by [Adros].
