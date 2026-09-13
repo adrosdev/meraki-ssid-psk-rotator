@@ -1,4 +1,4 @@
-"""meraki-ssid-psk-rotator — v0.3
+"""meraki-ssid-psk-rotator — v0.4
 
 This project is intentionally built in visible stages (v0.1 → v1.0),
 refactoring toward production practices one step at a time.
@@ -10,6 +10,19 @@ import random
 BASE_DIR = Path(__file__).parent
 
 network_all = ["branch1", "branch2", "branch3", "branch4", "mainoffice"]
+
+class Network:
+
+    def __init__(self, name):
+        self.name = name
+        self.status = "pending"
+
+    def rotate(self):
+        if random.random() < 0.3:
+            raise ConnectionError(f"Simulated timeout for {self.name}")
+        print(f"Rotating PSK for {self.name}")
+        self.status = "rotated"
+
 
 def selected_networks(path):
     """Read selected network names from a file, one per line. Return a clean list"""
@@ -26,40 +39,33 @@ def selected_networks(path):
         networks.append(name)
     return networks
 
-def rotate_network(network):
-    """Simulate a PSK rotation for one network."""
-    if random.random() < 0.3:
-        raise ConnectionError(f"Simulated timeout for {network}")
-    print(f"Rotating PSK for {network}")
-    return True
-
 def main():
     """Run one rotation: load selected networks and rotate them."""
 
     networks = selected_networks(BASE_DIR / "selected_networks.txt")
+    fleet = []
 
-    network_rotated = 0
-    network_skipped = 0
-    network_failed  = 0
-    result = []
+    for name in network_all:
+        fleet.append(Network(name))
 
-    for network in network_all:
-        if network in networks:
+
+    for network in fleet:
+        if network.name in networks:
             try:
-                rotate_network(network)
-                network_rotated += 1
-                result.append(f"{network} rotated")
+                network.rotate()
             except ConnectionError as e:
                 print(f"{network} FAILD {e}")
-                network_failed += 1
-                result.append(f"{network} FAILD")
-
+                network.status =  "skipped"
         else:
-            print(f"{network} skipped")
-            network_skipped += 1
-            result.append(f"{network} skipped")
+            print(f"{network.name} skipped")
+            network.status =  "skipped"
 
-    print(f"{network_rotated} rotated. {network_skipped} skipped. {network_failed} FAILD")
+    rotated = [n.name for n in fleet if n.status == "rotated"]
+    skipped = [n.name for n in fleet if n.status ==  "skipped"]
+    failed  = [n.name for n in fleet if n.status == "failed"]
+
+    result = [f"{n.name}: {n.status}" for n in fleet]
+    print(f"{len(rotated)} rotated. {len(skipped)} skipped. {len(failed)} FAILD")
     (BASE_DIR / "result.txt").write_text("\n".join(result))
 
 
