@@ -63,6 +63,5 @@ def main():
     (BASE_DIR / "result.txt").write_text("\n".join(result))
 
 
-
 if  __name__ ==  "__main__":
     main()
