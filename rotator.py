@@ -54,7 +54,7 @@ def main():
             try:
                 network.rotate()
             except ConnectionError as e:
-                print(f"{network} FAILD {e}")
+                print(f"{network.name} FAILD {e}")
                 network.status =  "skipped"
         else:
             print(f"{network.name} skipped")
