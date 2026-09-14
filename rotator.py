@@ -1,4 +1,4 @@
-"""meraki-ssid-psk-rotator — v0.5
+"""meraki-ssid-psk-rotator — v0.6
 
 This project is intentionally built in visible stages (v0.1 → v1.0),
 refactoring toward production practices one step at a time.
@@ -16,7 +16,7 @@ load_dotenv(BASE_DIR / ".env")
 API_KEY = os.environ.get("MERAKI_API_KEY")
 BASE_URL = "https://api.meraki.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
-TARGET_SSID = "branch_office - wireless WiFi"
+TARGET_SSID = "guest-wifi"
 NEW_PSK = os.environ.get("NEW_PSK")
 DRY_RUN = True
 

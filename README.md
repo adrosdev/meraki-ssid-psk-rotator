@@ -11,7 +11,7 @@
 Rotates the pre-shared key of a chosen SSID across selected networks in a
 Meraki organization — built for recurring guest WiFi password changes.
 
-- Adris Sahray
+ **Adris Sahray**
 
 </div>
 
