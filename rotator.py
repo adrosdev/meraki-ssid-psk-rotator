@@ -102,18 +102,18 @@ def main():
             try:
                 network.rotate()
             except (requests.RequestException, ValueError) as e:
-                print(f"{network.name} FAILD {e}")
-                network.status =  "faild"
+                print(f"{network.name} FAILED {e}")
+                network.status =  "failed"
         else:
             print(f"{network.name} skipped")
             network.status =  "skipped"
 
     rotated = [n.name for n in fleet if n.status == "rotated"]
     skipped = [n.name for n in fleet if n.status ==  "skipped"]
-    failed  = [n.name for n in fleet if n.status == "faild"]
+    failed  = [n.name for n in fleet if n.status == "failed"]
 
     result = [f"{n.name}: {n.status}" for n in fleet]
-    print(f"{len(rotated)} rotated. {len(skipped)} skipped. {len(failed)} FAILD")
+    print(f"{len(rotated)} rotated. {len(skipped)} skipped. {len(failed)} FAILED")
     (BASE_DIR / "result.txt").write_text("\n".join(result))
 
 
