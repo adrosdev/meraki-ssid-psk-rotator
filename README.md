@@ -75,6 +75,27 @@ Dry run is the default. Add `--execute` to perform the rotation.
 - The new PSK is never printed or written to any log or results file
 - Dry-run is the default; writes are opt-in
 
+## Known limitations
+
+Working and live-tested, with edges to know about:
+
+- **Network names are matched case-sensitively.** `Branch2` and `branch2`
+  are different names — spell entries in `selected_networks.txt` exactly
+  as they appear in the dashboard. A misspelled name is silently skipped.
+- **API key problems surface as errors, not guidance.** An invalid key
+  fails with `401 Unauthorized`; a read-only key passes the dry run but
+  fails on `--execute`. Verify the key has write access to the target
+  organization.
+- **Multi-org keys: the first organization is used.** If your key can see
+  several organizations, the tool currently operates on the first one
+  returned by the API.
+- **Dry-run counts label previewed networks as "rotated."** In dry-run
+  mode, "3 rotated" means "3 would be rotated."
+- **Rate limiting is not handled** — very large organizations may hit the
+  Meraki API's request limits.
+
+Each of these is a planned improvement — see the roadmap.
+
 ## Roadmap
 
 Built deliberately in public iterations, each tagged:
@@ -88,9 +109,10 @@ Built deliberately in public iterations, each tagged:
 | v0.5 | Real Meraki API, dry-run rotation, secrets via `.env` | ✅ |
 | v0.6 | pytest test suite | ✅ |
 | v0.7 | CLI flags, output polish, CI | ✅ |
+| v0.8+ | Mocked API tests, case-insensitive matching, logging, rate-limit handling | — |
 
-Not production-ready before v1.0. The git tags are the story — diff any two
-versions to watch the refactors happen.
+Ready for production within the limitations above — always verify with a dry
+run before `--execute`. Cheers!
 
 ## Support & contribute
 
