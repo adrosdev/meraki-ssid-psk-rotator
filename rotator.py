@@ -43,17 +43,17 @@ class Network:
                 break
 
         if target is None:
-            raise ValueError(f"SSID '{TARGET_SSID}' is not found on {self.name}")
+            raise ValueError(f"'{TARGET_SSID}' SSID is not found on {self.name}")
 
         if dry_run:
-            print(f"[DRY RUN] {self.name}: would set new PSK on SSID {target['number']} ('{TARGET_SSID}')")
+            print(f"[DRY RUN] {self.name}: SSID {target['number']} ('{TARGET_SSID}')")
             self.status = "rotated"
             return
         
         put_url = f"{url}/{target['number']}"
         response = requests.put(put_url, headers=HEADERS, json={"psk": NEW_PSK})
         response.raise_for_status()
-        print(f"{self.name}: PSK rotated on SSID {target['number']}")
+        print(f"[OK]      {self.name}: PSK rotated on SSID {target['number']}")
         self.status = "rotated"       
 
 
@@ -95,7 +95,7 @@ def main():
 
     org_id = get_org_id()
     network_data = get_networks(org_id)
-    print(f"networks found: {len(network_data)}")
+    print(f"[INFO]    Networks found: {len(network_data)}")
 
     fleet = []
     for net in network_data:
@@ -107,10 +107,10 @@ def main():
             try:
                 network.rotate(dry_run)
             except (requests.RequestException, ValueError) as e:
-                print(f"{network.name} FAILED {e}")
+                print(f"[FAILED] {e}")
                 network.status =  "failed"
         else:
-            print(f"{network.name} skipped")
+            print(f"[SKIP]    {network.name} skipped")
             network.status =  "skipped"
 
     rotated = [n.name for n in fleet if n.status == "rotated"]
@@ -118,7 +118,8 @@ def main():
     failed  = [n.name for n in fleet if n.status == "failed"]
 
     result = [f"{n.name}: {n.status}" for n in fleet]
-    print(f"{len(rotated)} rotated. {len(skipped)} skipped. {len(failed)} FAILED")
+    print("____")
+    print(f"{len(rotated)} rotated, {len(skipped)} skipped, {len(failed)} FAILED")
     (BASE_DIR / "result.txt").write_text("\n".join(result))
 
 
