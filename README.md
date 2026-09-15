@@ -5,13 +5,13 @@
 **One command. Every guest network. New password.**
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue)](https://www.python.org/)
-[![Tests](https://github.com/adrosdev/meraki-ssid-psk-rotator/actions/workflows/tests.yml/badge.svg)](https://github.com/adrosdev/meraki-ssid-psk-rotator/actions)
+[![Tests](https://github.com/adrosdev/meraki-ssid-psk-rotator/actions/workflows/tests.yaml/badge.svg)](https://github.com/adrosdev/meraki-ssid-psk-rotator/actions)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 Rotates the pre-shared key of a chosen SSID across selected networks in a
 Meraki organization — built for recurring guest WiFi password changes.
 
-[**Adris Sahray**](https://adros.dev)
+Built by [**Adris Sahray**](https://www.linkedin.com/in/mohammad-adris-s-51ab33221/)
 
 </div>
 
