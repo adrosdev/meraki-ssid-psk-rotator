@@ -87,7 +87,7 @@ Built deliberately in public iterations, each tagged:
 | v0.4 | `Network` class carries rotation state | ✅ |
 | v0.5 | Real Meraki API, dry-run rotation, secrets via `.env` | ✅ |
 | v0.6 | pytest test suite | ✅ |
-| v0.7 | CLI flags, output polish, CI | 🔨 |
+| v0.7 | CLI flags, output polish, CI | ✅ |
 
 Not production-ready before v1.0. The git tags are the story — diff any two
 versions to watch the refactors happen.
