@@ -118,7 +118,7 @@ def main():
     failed  = [n.name for n in fleet if n.status == "failed"]
 
     result = [f"{n.name}: {n.status}" for n in fleet]
-    print("____")
+    print("----")
     print(f"{len(rotated)} rotated, {len(skipped)} skipped, {len(failed)} FAILED")
     (BASE_DIR / "result.txt").write_text("\n".join(result))
 
