@@ -9,6 +9,7 @@ from pathlib import Path
 import os
 import requests
 from dotenv import load_dotenv
+import argparse
 
 
 BASE_DIR = Path(__file__).parent
@@ -16,9 +17,8 @@ load_dotenv(BASE_DIR / ".env")
 API_KEY = os.environ.get("MERAKI_API_KEY")
 BASE_URL = "https://api.meraki.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
-TARGET_SSID = "guest-wifi"
+TARGET_SSID = "GuestWiFi"
 NEW_PSK = os.environ.get("NEW_PSK")
-DRY_RUN = True
 
 class Network:
 
@@ -27,7 +27,7 @@ class Network:
         self.network_id = network_id
         self.status = "pending"
 
-    def rotate(self):
+    def rotate(self, dry_run):
         """Rotate this network's PSK for TARGET_SSID. Honors DRY_RUN."""
 
         url = f"{BASE_URL}/networks/{self.network_id}/wireless/ssids"
@@ -45,7 +45,7 @@ class Network:
         if target is None:
             raise ValueError(f"SSID '{TARGET_SSID}' is not found on {self.name}")
 
-        if DRY_RUN:
+        if dry_run:
             print(f"[DRY RUN] {self.name}: would set new PSK on SSID {target['number']} ('{TARGET_SSID}')")
             self.status = "rotated"
             return
@@ -86,13 +86,18 @@ def get_networks(orgs_id):
 
 def main():
 
+    parser = argparse.ArgumentParser(description="Rotate a Meraki SSID PSK across selected networks.")
+    parser.add_argument("--execute", action="store_true", help="perform the rotation (default is dry run)")
+    args = parser.parse_args()
+    dry_run = not args.execute
+    
     networks = selected_networks(BASE_DIR / "selected_networks.txt")
 
     org_id = get_org_id()
     network_data = get_networks(org_id)
+    print(f"networks found: {len(network_data)}")
 
     fleet = []
-
     for net in network_data:
         fleet.append(Network(net["name"], net["id"]))
 
@@ -100,7 +105,7 @@ def main():
     for network in fleet:
         if network.name in networks:
             try:
-                network.rotate()
+                network.rotate(dry_run)
             except (requests.RequestException, ValueError) as e:
                 print(f"{network.name} FAILED {e}")
                 network.status =  "failed"
